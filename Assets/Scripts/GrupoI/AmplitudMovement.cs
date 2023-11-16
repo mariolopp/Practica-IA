@@ -28,6 +28,8 @@ namespace GrupoI
             private List<Nodo> _listaAbierta = new List<Nodo>();
             
             private List<Nodo> _listaCerrada = new List<Nodo>();
+
+            private List<Nodo> padresMeta = new List<Nodo>();
             
             private Directions _direccionActual = Directions.None;
 
@@ -42,7 +44,7 @@ namespace GrupoI
             public CellInfo[] GetPath(CellInfo startNode, CellInfo targetNode)
             {
                 // Nodo en el que empieza el muñequito.
-                Nodo nodoInicial = new Nodo(_mundo, startNode, null);
+                Nodo nodoInicial = new Nodo(_mundo, startNode, null);   // El padre del nodo actual es null
                 
                 Nodo actual;      // Comenzamos con el nodo inicial como nodo actual
                 //actual = _listaAbierta[0];      //  NO entiendo que pinta esto ?
@@ -60,7 +62,14 @@ namespace GrupoI
                 // Comprobar si es la meta.
                 if (actual.esMeta())
                 {
-                    //Devolver nodo meta.
+                    // While que guarde todos los padres del nodo meta en orden en una lista
+                    while (actual!=null)        // Se meten padres en la lista hasta llegar al nodo con padre null (nodo origen)
+                    {
+                        padresMeta.Add(actual.getPadre());  // Vector para  guardar todos los padres de abajo a ariba de la meta de menor profundidad
+                        actual = actual.getPadre();
+                    }
+                    padresMeta.Reverse();   // Ordena la lista de forma que el ultimo padre en expandir ahora será el primero para recorrerla en orden mas tarde
+
                 }
                 else
                 {
@@ -81,9 +90,14 @@ namespace GrupoI
                 }
             }
 
-                CellInfo[] path = new CellInfo[1];
+            // Creamos una lista de vecinos en formato cellinfo
 
-                CellInfo nextCell = conseguirVecino(startNode, _direccionActual); // Devuelve la celda vecina en la dirección indicada
+            CellInfo[] path = new CellInfo[50]; ; // Devuelve la celda vecina en la dirección indicada
+            
+            for (int i = 0; i < padresMeta.Count; i++)
+            {
+                path[i] = (padresMeta[i].getInfoCelda());
+            }
                 
             //while (!nextCell.Walkable) {
             //    path[0] = nextCell;
@@ -95,11 +109,7 @@ namespace GrupoI
     }
 }
 
-
-
-
         // Poner limitador de tiempo para evitar que Unity crashee.
 
         //*/
-    }
-}
+

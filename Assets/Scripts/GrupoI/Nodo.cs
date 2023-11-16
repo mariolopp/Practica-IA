@@ -69,7 +69,15 @@ namespace GrupoI
             return nodosExpandidos;
         }
 
+        public Nodo getPadre() {
+            return padre;
+        }
+
+
+        public CellInfo getInfoCelda() { 
+            return infoCelda;
         
+        }
 
         //----------------ANTERIOR-----------------
         
