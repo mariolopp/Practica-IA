@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{BBAAB608-3F0E-09AB-1933-96C67F7F613F}</ProjectGuid>
+    <ProjectGuid>{E9CA0340-BBAD-1A38-30C7-AD85BC9F5C2C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -63,6 +63,8 @@
     <Compile Include="Assets\External\Supercyan Character Pack Zombie Sample\Scripts\ZombieCameraLogic.cs" />
     <Compile Include="Assets\External\Supercyan Character Pack Zombie Sample\Scripts\ZombieCharacterControl.cs" />
     <Compile Include="Assets\Scripts\Navigation\Interfaces\INavigationAgent.cs" />
+    <Compile Include="Assets\Scripts\GrupoI\Nodo.cs" />
+    <Compile Include="Assets\Scripts\GrupoI\AmplitudMovement.cs" />
     <Compile Include="Assets\External\Supercyan Character Pack Free Sample\Scripts\DemoFree.cs" />
     <Compile Include="Assets\External\Supercyan Character Pack Free Sample\Scripts\SimpleSampleCharacterControl.cs" />
     <Compile Include="Assets\Scripts\Components\EnemyMovement.cs" />
@@ -76,8 +78,6 @@
     <Compile Include="Assets\Scripts\Navigation\Interfaces\INavigationAlgorithm.cs" />
     <Compile Include="Assets\Scripts\Components\WorldManager.cs" />
     <Compile Include="Assets\External\Supercyan Character Pack Free Sample\Scripts\FreeCameraLogic.cs" />
-    <Compile Include="Assets\Scripts\GrupoI\Nodo.cs" />
-    <Compile Include="Assets\Scripts\GrupoI\AmplitudMovement.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
