@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Navigation.World;
+using UnityEditor.VersionControl;
 
 namespace GrupoI
 {
@@ -33,8 +34,9 @@ namespace GrupoI
             
             private Directions _direccionActual = Directions.None;
 
+            private int nodeCount = 1;
 
-            public void Initialize(WorldInfo informacionMundo, INavigationAlgorithm.AllowedMovements movimientosPermitidos)
+        public void Initialize(WorldInfo informacionMundo, INavigationAlgorithm.AllowedMovements movimientosPermitidos)
             {
                 _mundo = informacionMundo;
                 //_dir = direccionesPermitidas;
@@ -46,12 +48,13 @@ namespace GrupoI
                 // Nodo en el que empieza el muñequito.
                 Nodo nodoInicial = new Nodo(_mundo, startNode, null);   // El padre del nodo actual es null
                 
-                Nodo actual;      // Comenzamos con el nodo inicial como nodo actual
+                Nodo actual= nodoInicial;      // Comenzamos con el nodo inicial como nodo actual
                 //actual = _listaAbierta[0];      //  NO entiendo que pinta esto ?
                 _listaAbierta.Add(nodoInicial);      // Añadimos el estado inicial a la lista abierta
 
-            while (_listaAbierta.Count != 0) //Mientras la lista no esté vacía.
+            while (_listaAbierta.Count != 0 && _listaAbierta != null) //Mientras la lista no esté vacía.
             {
+                Debug.Log("While iniciado!!");
                 // Coger el primer elemento de la lista abierta.
                 actual = _listaAbierta[0];
                 _listaAbierta.RemoveAt(0);  // Eliminamos dicho elemento de la lista abierta
@@ -63,13 +66,15 @@ namespace GrupoI
                 if (actual.esMeta())
                 {
                     // While que guarde todos los padres del nodo meta en orden en una lista
-                    while (actual!=null)        // Se meten padres en la lista hasta llegar al nodo con padre null (nodo origen)
+                    while (actual != null)        // Se meten padres en la lista hasta llegar al nodo con padre null (nodo origen)
                     {
                         padresMeta.Add(actual.getPadre());  // Vector para  guardar todos los padres de abajo a ariba de la meta de menor profundidad
                         actual = actual.getPadre();
                     }
                     padresMeta.Reverse();   // Ordena la lista de forma que el ultimo padre en expandir ahora será el primero para recorrerla en orden mas tarde
+                    _listaAbierta = null;   // Ponemos la lista abierta a null para no volver a ejecutar el while
 
+                    Debug.Log("Meta!!");
                 }
                 else
                 {
@@ -92,20 +97,40 @@ namespace GrupoI
 
             // Creamos una lista de vecinos en formato cellinfo
 
-            CellInfo[] path = new CellInfo[50]; ; // Devuelve la celda vecina en la dirección indicada
-            
-            for (int i = 0; i < padresMeta.Count; i++)
-            {
-                path[i] = (padresMeta[i].getInfoCelda());
-            }
-                
-            //while (!nextCell.Walkable) {
-            //    path[0] = nextCell;
-            //}
+            CellInfo[] path = new CellInfo[1]; ; // Devuelve la celda vecina en la dirección indicada
 
+            //for (int i = 0; i < padresMeta.Count; i++)
+            //{
+            //    ;
+            //}
+            //path[0] = obtenerVecino(nodoInicial.getInfoCelda(), Directions.Up);
+            //path[0] = nodoInicial.getInfoCelda();
+            path[0] = padresMeta[nodeCount].getInfoCelda();
+                nodeCount++;
                 return path;
             }
+        public CellInfo obtenerVecino(CellInfo current, Directions direction)
+        {
+            CellInfo neighbour;
 
+            switch (direction)
+            {
+                case Directions.Up:
+                    neighbour = _mundo[current.x, current.y - 1];
+                    break;
+                case Directions.Right:
+                    neighbour = _mundo[current.x + 1, current.y];
+                    break;
+                case Directions.Down:
+                    neighbour = _mundo[current.x, current.y + 1];
+                    break;
+                default:
+                    neighbour = _mundo[current.x - 1, current.y];
+                    break;
+            }
+
+            return neighbour;
+        }
     }
 }
 

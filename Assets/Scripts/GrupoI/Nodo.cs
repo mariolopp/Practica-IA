@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Navigation.World;
 using static Navigation.World.CellInfo;
+using UnityEditor.Experimental.GraphView;
 
 namespace GrupoI
 {
@@ -14,6 +15,8 @@ namespace GrupoI
         private WorldInfo informacionMundo;
 
         private Nodo padre;
+
+        //private Direction direction;
 
         // Constructor.
         public Nodo(WorldInfo informacion, CellInfo celda, Nodo padre)
@@ -79,8 +82,14 @@ namespace GrupoI
         
         }
 
+        public WorldInfo getWorldInfo() {
+            return informacionMundo;
+        }
+
+
+
         //----------------ANTERIOR-----------------
-        
+
 
         /*
         private CellInfo infoCelda; // Es la información de la celda en la que está este nodo.
