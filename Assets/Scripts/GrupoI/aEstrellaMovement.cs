@@ -4,6 +4,7 @@ using Navigation.World;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class aEstrellaMovement : INavigationAlgorithm
 {
@@ -77,35 +78,40 @@ public class aEstrellaMovement : INavigationAlgorithm
                             Debug.Log("Count es true!!");
                         }
                     }
-                    if (!count)
+                    if (!count)     // Se ejecuta si el elemento no estaba ya en la lista cerrada
                     {
                         // Meter el nodo en la posicion correspondiente ordenado con el fEstrella.
                         // Hay que tener en cuenta que la lista esté vacía o solo tenga 1 elemento.
-                        bool entre2 = false;
-                        if (_listaAbierta.Count <1)     // Si hay 0 elementos añadimos directamente al final
-                        {
-                            _listaAbierta.Add(nodo);
-                            entre2 = true;
-                        }
-                        
-                        /* for (int i = 0; i < _listaAbierta.Count-1; i++) // Si hay 1 elemento no se ejecuta, si hay 2 elementos se ejecuta 1 vez, si hay 3 se ejecuta 2 y asi...
-                        {
+                        //bool entre2 = false;
+                        //if (_listaAbierta.Count < 1)     // Si hay 0 elementos añadimos directamente al final
+                        //{
+                        //    _listaAbierta.Add(nodo);
+                        //    entre2 = true;
+                        //} else {
 
-                            if ((nodo.getFEstrella() >= _listaAbierta[i].getFEstrella() && nodo.getFEstrella() <= _listaAbierta[i + 1].getFEstrella()))
-                            {
-                                _listaAbierta.Insert(i + 1, nodo); //Insert recibe un índice. Mete el elemento antes de ese indice.
-                                entre2 = true;
-                            } 
-                        } */
-                        if (nodo.getFEstrella() <= _listaAbierta[0].getFEstrella() && !entre2)
-                        {    // Caso que deba ir delante cuando haya un solo elemento
-                            _listaAbierta.Insert(0, nodo);  // Insertamos despues del primer elemento
-                            entre2 = true;
-                        }
-                        else if(!entre2)
-                        {
-                            _listaAbierta.Add(nodo); // Caso que deba ir detras haya ninguno, uno, o varios elementos
-                        }
+                        //    for (int i = 0; i < _listaAbierta.Count - 1; i++) // Si hay 1 elemento no se ejecuta, si hay 2 elementos se ejecuta 1 vez, si hay 3 se ejecuta 2 y asi...
+                        //    {
+                        //        if (nodo.getFEstrella() >= _listaAbierta[i].getFEstrella() && nodo.getFEstrella() <= _listaAbierta[i + 1].getFEstrella())
+                        //        {
+                        //            _listaAbierta.Insert(i+1, nodo); //Insert recibe un índice. Mete el elemento antes de ese indice.
+                        //            entre2 = true;
+                        //        }
+                        //    }
+                        //}
+                        //if (nodo.getFEstrella() <= _listaAbierta[0].getFEstrella() && !entre2)
+                        //{    // Caso que deba ir delante cuando haya un solo elemento
+                        //    _listaAbierta.Insert(0, nodo);  // Insertamos despues del primer elemento
+                        //    entre2 = true;
+                        //}
+                        //else if (!entre2)
+                        //{
+                        //    _listaAbierta.Add(nodo); // Caso que deba ir detras haya ninguno, uno, o varios elementos
+                        //}
+
+                        // FORMA DE SANDRO
+                        _listaAbierta.Add(nodo);
+                        //_listaAbierta = _listaAbierta.OrderBy(o => o.getFEstrella()).ToList();
+                        _listaAbierta.Sort((obj1, obj2) => obj1.getFEstrella().CompareTo(obj2.getFEstrella()));
 
                     }
                 }
@@ -120,9 +126,10 @@ public class aEstrellaMovement : INavigationAlgorithm
         CellInfo[] path = new CellInfo[padresMeta.Count]; ; // Devuelve la celda vecina en la dirección indicada
         for (int i = padresMeta.Count-1, j = 0; i >= 0; i--, j++)
         {
-            Debug.Log("Iteracion nº "+i);
+            Debug.Log("Iteracion nº "+j+ " f* = " + padresMeta[i].getFEstrella());
             path[j] = padresMeta[i].getInfoCelda();
         }
+
 
         return path;
 
