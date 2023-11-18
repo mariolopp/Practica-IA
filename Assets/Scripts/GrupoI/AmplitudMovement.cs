@@ -34,14 +34,17 @@ namespace GrupoI
             
             private Directions _direccionActual = Directions.None;
 
-            private int nodeCount = 1;
+            private int nodeCount = 0;
+
+            private bool meta = false;
 
         public void Initialize(WorldInfo informacionMundo, INavigationAlgorithm.AllowedMovements movimientosPermitidos)
             {
                 _mundo = informacionMundo;
-                //_dir = direccionesPermitidas;
+            //_dir = direccionesPermitidas;
+            Debug.Log("iniciado!!");
 
-            }
+        }
 
             public CellInfo[] GetPath(CellInfo startNode, CellInfo targetNode)
             {
@@ -52,7 +55,7 @@ namespace GrupoI
                 //actual = _listaAbierta[0];      //  NO entiendo que pinta esto ?
                 _listaAbierta.Add(nodoInicial);      // Añadimos el estado inicial a la lista abierta
 
-            while (_listaAbierta.Count != 0 && _listaAbierta != null) //Mientras la lista no esté vacía.
+            while (!meta) //Mientras la lista no esté vacía.
             {
                 Debug.Log("While iniciado!!");
                 // Coger el primer elemento de la lista abierta.
@@ -72,7 +75,7 @@ namespace GrupoI
                         actual = actual.getPadre();
                     }
                     padresMeta.Reverse();   // Ordena la lista de forma que el ultimo padre en expandir ahora será el primero para recorrerla en orden mas tarde
-                    _listaAbierta = null;   // Ponemos la lista abierta a null para no volver a ejecutar el while
+                    meta=true;   // Eliminamos todos los elementos de la lista abierta para que no se ejecute mas el while
 
                     Debug.Log("Meta!!");
                 }
@@ -83,12 +86,18 @@ namespace GrupoI
                     //Meter nodosExpandidos en la lista abierta.
                     foreach (Nodo nodo in nodosExpandidos)          // Recorre la lista nodosExpandidos
                     {
+                        bool count = false;
                         for (int i = 0; i < _listaCerrada.Count; i++)
                         {
-                            if (nodo != _listaCerrada[i])
+                            if (nodo == _listaCerrada[i])
                             {     // Añadimos unicamente si estos no existian ya en la lista cerrada
-                                _listaAbierta.Add(nodo);        // Lo añade al final.
+                                count = true;
+                                Debug.Log("Count es true!!");
                             }
+                        }
+                        if (count)
+                        {
+                            _listaAbierta.Add(nodo);        // Lo añade al final de la lista abierta
                         }
                     }
 
@@ -97,17 +106,20 @@ namespace GrupoI
 
             // Creamos una lista de vecinos en formato cellinfo
 
-            CellInfo[] path = new CellInfo[1]; ; // Devuelve la celda vecina en la dirección indicada
+            CellInfo[] path = new CellInfo[10]; ; // Devuelve la celda vecina en la dirección indicada
 
-            //for (int i = 0; i < padresMeta.Count; i++)
+            //for (int i = padresMeta.Count-2; i >= 0; i--)
             //{
-            //    ;
+            //    Debug.Log("For iniciado!!");
+            //    path[i] = padresMeta[i].getInfoCelda();
             //}
             //path[0] = obtenerVecino(nodoInicial.getInfoCelda(), Directions.Up);
             //path[0] = nodoInicial.getInfoCelda();
+            //path[0] = padresMeta[nodeCount].getInfoCelda();
             path[0] = padresMeta[nodeCount].getInfoCelda();
                 nodeCount++;
-                return path;
+            
+            return path;
             }
         public CellInfo obtenerVecino(CellInfo current, Directions direction)
         {

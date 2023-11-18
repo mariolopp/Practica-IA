@@ -78,6 +78,7 @@
     <Compile Include="Assets\Scripts\Navigation\Interfaces\INavigationAlgorithm.cs" />
     <Compile Include="Assets\Scripts\Components\WorldManager.cs" />
     <Compile Include="Assets\External\Supercyan Character Pack Free Sample\Scripts\FreeCameraLogic.cs" />
+    <Compile Include="Assets\Scripts\GrupoI\aEstrellaMovement.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

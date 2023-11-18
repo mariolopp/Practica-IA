@@ -45,7 +45,7 @@ namespace Navigation.World
         public CellInfo[] Targets => GetObjectives();
         public CellInfo[] Enemies => GetEnemies();
         public CellInfo this[int x, int y] => getCellAt(x, y);
-        public Vector2Int WorldSize => _worldSize;
+        public Vector2Int WorldSize => _worldSize;  
 
         public WorldInfo(GameObject worldBase, float resolution = 1.0f)
         {

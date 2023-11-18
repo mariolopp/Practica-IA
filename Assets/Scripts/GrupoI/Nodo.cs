@@ -16,7 +16,8 @@ namespace GrupoI
 
         private Nodo padre;
 
-        //private Direction direction;
+        private int hestrella;
+
 
         // Constructor.
         public Nodo(WorldInfo informacion, CellInfo celda, Nodo padre)
@@ -53,20 +54,21 @@ namespace GrupoI
 
             if (derecha.Walkable)
                 {
+                    //nodoDerecha.hestrella = 19 - nodoDerecha.infoCelda.x + 19 - nodoDerecha.infoCelda.y;
                     nodosExpandidos.Add(nodoDerecha);
                 }
-                if (izquierda.Walkable)
-                {
-                    nodosExpandidos.Add(nodoIzquierda);
-                }
-                if (arriba.Walkable)
-                {
-                    nodosExpandidos.Add(nodoArriba);
-                }
-                if (abajo.Walkable)
-                {
-                    nodosExpandidos.Add(nodoAbajo);
-                }
+            if (izquierda.Walkable)
+            {
+                nodosExpandidos.Add(nodoIzquierda);
+            }
+            if (arriba.Walkable)
+            {
+                nodosExpandidos.Add(nodoArriba);
+            }
+            if (abajo.Walkable)
+            {
+                nodosExpandidos.Add(nodoAbajo);
+            }
                 
 
             return nodosExpandidos;
