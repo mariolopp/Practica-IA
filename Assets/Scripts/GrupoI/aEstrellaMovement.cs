@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class aEstrellaMovement
+public class aEstrellaMovement : INavigationAlgorithm
 {
     public enum Directions
     {
@@ -16,10 +16,11 @@ public class aEstrellaMovement
         Left
     }
 
-    private WorldInfo _mundo;       
+    private WorldInfo _mundo;
     private List<Nodo> _listaAbierta = new List<Nodo>();
     private List<Nodo> _listaCerrada = new List<Nodo>();
     private bool meta = false;
+    
 
 
     public void Initialize(WorldInfo informacionMundo, INavigationAlgorithm.AllowedMovements movimientosPermitidos)
@@ -35,9 +36,10 @@ public class aEstrellaMovement
 
         _listaAbierta.Add(nodoInicial);      // Añadimos el estado inicial a la lista abierta
 
-        Nodo actual = nodoInicial;
+        Nodo actual;
 
-        while (!meta) {
+        while (meta)
+        {
             // Calcular distancia manhattan de los posibles sucesores del nodo a la meta
             Debug.Log("While iniciado!!");
 
@@ -47,20 +49,15 @@ public class aEstrellaMovement
             // Metemos todos los nodos que hemos visitado en la lista cerrada.
             _listaCerrada.Add(actual);
 
-            if (actual.esMeta())
-            {
 
-            }
-            else
-            {
-                List<Nodo> nodosExpandidos = actual.expandirNodo();     // Lista de posibles nodos a expandir a partir del actual
-
-
-
-
-
-
-            }
         }
 
+        Debug.Log("Distancia a la meta: "+actual.getInfoCelda().Distance(_mundo.Exit, CellInfo.DistanceType.Euclidean));
+
+        CellInfo[] path = new CellInfo[1];
+        path[0] = _mundo[16,16];
+        return path;
+
     }
+
+}

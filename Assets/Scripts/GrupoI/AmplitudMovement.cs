@@ -51,15 +51,17 @@ namespace GrupoI
                 // Nodo en el que empieza el muñequito.
                 Nodo nodoInicial = new Nodo(_mundo, startNode, null);   // El padre del nodo actual es null
                 
-                Nodo actual= nodoInicial;      // Comenzamos con el nodo inicial como nodo actual
-                //actual = _listaAbierta[0];      //  NO entiendo que pinta esto ?
-                _listaAbierta.Add(nodoInicial);      // Añadimos el estado inicial a la lista abierta
+                
+                Nodo actual = nodoInicial;      // Comenzamos con el nodo inicial como nodo actual
 
-            while (!meta) //Mientras la lista no esté vacía.
+            //actual = _listaAbierta[0];      //  NO entiendo que pinta esto ?
+            _listaAbierta.Add(nodoInicial);      // Añadimos el estado inicial a la lista abierta
+
+             while (!meta) // Mientras no se haya encontrado una meta
             {
                 Debug.Log("While iniciado!!");
                 // Coger el primer elemento de la lista abierta.
-                actual = _listaAbierta[0];
+                actual = _listaAbierta[0];  
                 _listaAbierta.RemoveAt(0);  // Eliminamos dicho elemento de la lista abierta
 
                 // Metemos todos los nodos que hemos visitado en la lista cerrada.
@@ -69,13 +71,16 @@ namespace GrupoI
                 if (actual.esMeta())
                 {
                     // While que guarde todos los padres del nodo meta en orden en una lista
-                    while (actual != null)        // Se meten padres en la lista hasta llegar al nodo con padre null (nodo origen)
+                    padresMeta.Add(actual);
+                    while (actual.getPadre() != null)        // Se meten padres en la lista hasta llegar al nodo con padre null (nodo origen)
                     {
                         padresMeta.Add(actual.getPadre());  // Vector para  guardar todos los padres de abajo a ariba de la meta de menor profundidad
                         actual = actual.getPadre();
                     }
-                    padresMeta.Reverse();   // Ordena la lista de forma que el ultimo padre en expandir ahora será el primero para recorrerla en orden mas tarde
-                    meta=true;   // Eliminamos todos los elementos de la lista abierta para que no se ejecute mas el while
+                    Debug.Log("Count es true!!  " + padresMeta[0].getInfoCelda().x);
+                    Debug.Log("Count es true y vale!!  " + padresMeta.Count);
+                    //padresMeta.Reverse();   // Ordena la lista de forma que el ultimo padre en expandir ahora será el primero para recorrerla en orden mas tarde
+                    meta =true;   // Eliminamos todos los elementos de la lista abierta para que no se ejecute mas el while
 
                     Debug.Log("Meta!!");
                 }
@@ -89,13 +94,13 @@ namespace GrupoI
                         bool count = false;
                         for (int i = 0; i < _listaCerrada.Count; i++)
                         {
-                            if (nodo == _listaCerrada[i])
+                            if (nodo.getInfoCelda() == _listaCerrada[i].getInfoCelda())
                             {     // Añadimos unicamente si estos no existian ya en la lista cerrada
                                 count = true;
                                 Debug.Log("Count es true!!");
                             }
                         }
-                        if (count)
+                        if (!count)
                         {
                             _listaAbierta.Add(nodo);        // Lo añade al final de la lista abierta
                         }
@@ -106,43 +111,53 @@ namespace GrupoI
 
             // Creamos una lista de vecinos en formato cellinfo
 
-            CellInfo[] path = new CellInfo[10]; ; // Devuelve la celda vecina en la dirección indicada
-
-            //for (int i = padresMeta.Count-2; i >= 0; i--)
+            CellInfo[] path = new CellInfo[padresMeta.Count]; ; // Devuelve la celda vecina en la dirección indicada
+            for (int i = padresMeta.Count-1, j = 0; i >= 0; i--, j++)
+            {
+                Debug.Log("Iteracion nº "+i);
+                path[j] = padresMeta[i].getInfoCelda();
+            }
+            //for (int i = 0; i < padresMeta.Count; i++)
             //{
             //    Debug.Log("For iniciado!!");
             //    path[i] = padresMeta[i].getInfoCelda();
             //}
+            //Debug.Log("Count es true!!  "+ padresMeta[0].getInfoCelda().x);
             //path[0] = obtenerVecino(nodoInicial.getInfoCelda(), Directions.Up);
             //path[0] = nodoInicial.getInfoCelda();
             //path[0] = padresMeta[nodeCount].getInfoCelda();
-            path[0] = padresMeta[nodeCount].getInfoCelda();
-                nodeCount++;
-            
+            //path[0] = padresMeta[nodeCount].getInfoCelda();
+            //    nodeCount++;
+
+            for(int i=0; i<padresMeta.Count; i++)
+            {
+                Debug.Log("Nodo nº " + i + "Posicion x: "+padresMeta[i].getInfoCelda().x + ", " + padresMeta[i].getInfoCelda().y);
+            }
+
             return path;
             }
-        public CellInfo obtenerVecino(CellInfo current, Directions direction)
-        {
-            CellInfo neighbour;
+        //public CellInfo obtenerVecino(CellInfo current, Directions direction)
+        //{
+        //    CellInfo neighbour;
 
-            switch (direction)
-            {
-                case Directions.Up:
-                    neighbour = _mundo[current.x, current.y - 1];
-                    break;
-                case Directions.Right:
-                    neighbour = _mundo[current.x + 1, current.y];
-                    break;
-                case Directions.Down:
-                    neighbour = _mundo[current.x, current.y + 1];
-                    break;
-                default:
-                    neighbour = _mundo[current.x - 1, current.y];
-                    break;
-            }
+        //    switch (direction)
+        //    {
+        //        case Directions.Up:
+        //            neighbour = _mundo[current.x, current.y - 1];
+        //            break;
+        //        case Directions.Right:
+        //            neighbour = _mundo[current.x + 1, current.y];
+        //            break;
+        //        case Directions.Down:
+        //            neighbour = _mundo[current.x, current.y + 1];
+        //            break;
+        //        default:
+        //            neighbour = _mundo[current.x - 1, current.y];
+        //            break;
+        //    }
 
-            return neighbour;
-        }
+        //    return neighbour;
+        //}
     }
 }
 
