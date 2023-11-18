@@ -16,14 +16,18 @@ namespace GrupoI
 
         private Nodo padre;
 
+        private float g;
+
         private float fEstrella;
 
         // Constructor.
-        public Nodo(WorldInfo informacion, CellInfo celda, Nodo padre)
+        public Nodo(WorldInfo informacion, CellInfo celda, Nodo padre, float g)
         {
             this.infoCelda = celda;
             this.informacionMundo = informacion;
             this.padre = padre;
+            this.g = g;
+            fEstrella = g + this.infoCelda.Distance(this.informacionMundo.Exit, CellInfo.DistanceType.Euclidean); // G del nodo + su distancia euclidea a la meta
         }
 
         // Devuelve true si es el nodo meta.
@@ -43,19 +47,19 @@ namespace GrupoI
             CellInfo arriba = informacionMundo[infoCelda.x, infoCelda.y-1];
             CellInfo abajo = informacionMundo[infoCelda.x, infoCelda.y+1];
 
-            Nodo nodoDerecha = new Nodo(informacionMundo, derecha, this);
-            Nodo nodoIzquierda = new Nodo(informacionMundo, izquierda, this);
-            Nodo nodoArriba = new Nodo(informacionMundo, arriba, this);
-            Nodo nodoAbajo = new Nodo(informacionMundo, abajo, this);
+            Nodo nodoDerecha = new Nodo(informacionMundo, derecha, this, g+1);
+            Nodo nodoIzquierda = new Nodo(informacionMundo, izquierda, this, g+1);
+            Nodo nodoArriba = new Nodo(informacionMundo, arriba, this, g+1);
+            Nodo nodoAbajo = new Nodo(informacionMundo, abajo, this, g+1);
 
 
             //¿¿¿¿¿EVITAR CICLOS SIMPLES???????
 
             if (derecha.Walkable)
-                {
-                    //nodoDerecha.hestrella = 19 - nodoDerecha.infoCelda.x + 19 - nodoDerecha.infoCelda.y;
-                    nodosExpandidos.Add(nodoDerecha);
-                }
+            {
+                //nodoDerecha.hestrella = 19 - nodoDerecha.infoCelda.x + 19 - nodoDerecha.infoCelda.y;
+                nodosExpandidos.Add(nodoDerecha);
+            }
             if (izquierda.Walkable)
             {
                 nodosExpandidos.Add(nodoIzquierda);
@@ -86,6 +90,10 @@ namespace GrupoI
 
         public WorldInfo getWorldInfo() {
             return informacionMundo;
+        }
+
+        public float getFEstrella() {
+            return fEstrella;
         }
         
     }

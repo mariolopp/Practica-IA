@@ -7,7 +7,7 @@ using UnityEditor.VersionControl;
 
 namespace GrupoI
 {
-    public class AmplitudMovement : INavigationAlgorithm
+    public class AmplitudMovement
     {
         //*
         public enum AllowedMovements
@@ -49,7 +49,7 @@ namespace GrupoI
             public CellInfo[] GetPath(CellInfo startNode, CellInfo targetNode)
             {
                 // Nodo en el que empieza el muñequito.
-                Nodo nodoInicial = new Nodo(_mundo, startNode, null);   // El padre del nodo actual es null
+                Nodo nodoInicial = new Nodo(_mundo, startNode, null, 0);   // El padre del nodo actual es null
                 
                 
                 Nodo actual = nodoInicial;      // Comenzamos con el nodo inicial como nodo actual
