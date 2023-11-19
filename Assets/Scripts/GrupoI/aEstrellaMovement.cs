@@ -23,8 +23,9 @@ public class aEstrellaMovement : INavigationAlgorithm
     private WorldInfo _mundo;
     private List<Nodo> _listaAbierta = new List<Nodo>();
     private List<Nodo> _listaCerrada = new List<Nodo>();
-    private List<Nodo> padresMeta = new List<Nodo>();
-    private bool meta = false;
+    private List<Nodo> _padresMeta = new List<Nodo>();
+    private bool _meta = false;
+    private int factor = 5;   // Limitado a examinar como máximo los 'factor' primeros elementos de la lista abierta
     
 
 
@@ -40,160 +41,95 @@ public class aEstrellaMovement : INavigationAlgorithm
         Nodo nodoInicial = new Nodo(_mundo, startNode, null, 0);   // El padre del nodo actual es null
         Nodo nodoFinal = new Nodo(_mundo, targetNode, null, 0);
 
-        //SortedSet<Nodo> _listaAbierta = new SortedSet<Nodo>(Comparer<float>.Create(
-        //    x => x.getFEstrella()
-        //));;
-
         _listaAbierta.Add(nodoInicial);      // Añadimos el estado inicial a la lista abierta
 
         Nodo actual = nodoInicial;
 
-        while (!meta)
+        while (!_meta)
         {
-            // Calcular distancia manhattan de los posibles sucesores del nodo a la meta
             Debug.Log("While iniciado!!");
 
-            actual = _listaAbierta[0];
-            _listaAbierta.RemoveAt(0);  // Eliminamos dicho elemento de la lista abierta
+            actual = _listaAbierta[0];  // Leemos al nodo actual el primer elemento
+            _listaAbierta.RemoveAt(0);  // Eliminamos el primer elemento de la lista abierta
 
-            // Metemos todos los nodos que hemos visitado en la lista cerrada.
+            // Guardamos todos los nodos que hemos visitado en la lista cerrada.
             _listaCerrada.Add(actual);
 
-            if (actual.getInfoCelda().Equals(nodoFinal.getInfoCelda())/*actual.esMeta()*/)
+            if (actual.getInfoCelda().Equals(nodoFinal.getInfoCelda())/*actual.esMeta()*/) // Se ejecuta si el nodo actual es la meta
             {
                 // While que guarde todos los padres del nodo meta en orden en una lista
-                padresMeta.Add(actual);     // Nodo meta
-                while (actual.getPadre() != null)        // Se meten padres en la lista hasta llegar al nodo con padre null (nodo origen)
+                _padresMeta.Add(actual);                // Nodo meta
+                while (actual.getPadre() != null)       // Se meten padres en la lista hasta llegar al nodo con padre null (nodo origen)
                 {
-                    padresMeta.Add(actual.getPadre());  // Vector para  guardar todos los padres de abajo a ariba de la meta de menor profundidad
+                    _padresMeta.Add(actual.getPadre()); // Vector para  guardar todos los padres de abajo a ariba de la meta
                     actual = actual.getPadre();
                 }
-                meta = true;   // Eliminamos todos los elementos de la lista abierta para que no se ejecute mas el while
+                _meta = true;   // La meta ha sido alcanzada y el while no se volverá a ejecutar
             }
-            else
+            else               // Caso en el que el nodo actual no sea la meta
             {
-                List<Nodo> nodosExpandidos = actual.expandirNodo();     // Lista de nodos expandidos a partir del actual
-
+                List<Nodo> nodosExpandidos = actual.expandirNodo();     // Lista de nodos puede expandir el actual
+                Debug.Log("Nº de nodos expandidos "+nodosExpandidos.Count);
                 //Meter nodosExpandidos en la lista abierta.
                 foreach (Nodo nodo in nodosExpandidos)              // Recorre la lista nodosExpandidos
                 {
-                    Debug.Log("Foreach iniciado");
                     bool count = false;
-                    bool entre2 = false;
-                    for (int i = 0; i < _listaCerrada.Count; i++)   
+                    
+                    for (int i = 0; i < _listaCerrada.Count; i++)      // Recorremos la lista cerrada para comprobar si nuestro nodo expandido candidato ya fué expandido
                     {
-                        if (nodo.getInfoCelda() == _listaCerrada[i].getInfoCelda())
+                        if (nodo.getInfoCelda().Equals(_listaCerrada[i].getInfoCelda()))
                         {     // Añadimos unicamente si estos no existian ya en la lista cerrada
                             count = true;
                             Debug.Log("El elemento ya estaba en la lista cerrada");
-                            //break;  // Salimos del bucle for una vez sabemos que está en la lista cerrada no hace falta seguir comprobando
+                            break;  // Salimos del bucle for. Una vez sabemos que está en la lista cerrada no hace falta seguir comprobando
                         }
                     }
-                    if (!count)     // Se ejecuta si el elemento no estaba ya en la lista cerrada
+                    if (!count)     // Se ejecuta si el elemento no estaba en la lista cerrada
                     {
                         // Meter el nodo en la posicion correspondiente ordenado con el fEstrella.
-                        // Hay que tener en cuenta que la lista puede estar vacía o solo tener 1 elemento.
-                        
-                        if (_listaAbierta.Count < 1)     // Si hay 0 elementos añadimos directamente a la lista
+                        // Hay que tener en cuenta que la lista puede estar vacía
+                        bool entre2 = false;
+                        if (_listaAbierta.Count < 1)     // Si hay 0 elementos
                         {
-                            _listaAbierta.Add(nodo);
+                            _listaAbierta.Add(nodo);        // Añadimos a la lista directamente
                             entre2 = true;
-                            Debug.Log("Añadido al final!!");
+                            Debug.Log("El nodo se ha añadido al final de la lista");
                         }
-                        else if(!entre2)
+                        else if (!entre2)
                         {
-
-                            //for (int i = 0; i < _listaAbierta.Count - 1; i++) // Si hay 1 elemento no se ejecuta, si hay 2 elementos se ejecuta 1 vez, si hay 3 se ejecuta 2 y asi...
-                            //{
-                            //    if (nodo.getFEstrella() >= _listaAbierta[i].getFEstrella() && nodo.getFEstrella() <= _listaAbierta[i + 1].getFEstrella())
-                            //    {
-                            //        _listaAbierta.Insert(i + 1, nodo); //Insert recibe un índice. Mete el elemento antes de ese indice.
-                            //        entre2 = true;
-                            //        break;
-                            //    }
-                            //}
-
-                            // Se puede descomentar este for y comentar el if inmediatamente posterior a este for. El resultado no es el mismo pero se sigue llegando a la meta
-                            for (int i = 0; i < _listaAbierta.Count; i++) // Si hay 1 elemento se añadirá a su izquierda el nodo si es menor al elemento.
-                                                                          // Si hay 2 se compara si es menor que cada uno desde el principiio para añadirlo delante del primer caso en el que sea menor
-                            {
-                                Debug.Log("For iniciado!!");
+                            // Se puede cambiar la variable 'factor'. El resultado es mas optimo si incrementamos su valor, pero el tiempo de cómputo también crecerá
+                            for (int i = 0; i < Math.Min(_listaAbierta.Count, factor); i++)     // El nodo se añadirá delante del primer nodo de la lista abierta que sea mayor que el
+                            {                                                               
+                                Debug.Log("F* candidato "+ nodo.getFEstrella()+" vs F* de la posicion "+i+" " + _listaAbierta[i].getFEstrella());
                                 if (nodo.getFEstrella() < _listaAbierta[i].getFEstrella())  // Si el elemento es menor, este se añade a la izquierda de con el que se comparó
                                 {
                                     Debug.Log("Lista abierta tiene " + _listaAbierta.Count + " posiciones");
                                     _listaAbierta.Insert(i, nodo); //Insert recibe un índice. Mete el elemento antes de ese indice.
                                     entre2 = true;
                                     Debug.Log("Se ha añadido a la lista un elemento de x = " + nodo.getInfoCelda().x + " y = "+ nodo.getInfoCelda().y + " y una heurística de f* = "+ nodo.getFEstrella()+" en la posición "+i);
-                                    Debug.Log("Lista abierta tiene " + _listaAbierta.Count + " posiciones");
-                                    break;  // Nos salimos del bloque for  
+                                    Debug.Log("Lista abierta ahora tiene " + _listaAbierta.Count + " posiciones");
+                                    break;  // Nos salimos del bloque for si ya hemos encontrado donde introducir el elemento
                                 }
                             }
                         }
-                        //if (nodo.getFEstrella() <= _listaAbierta[0].getFEstrella() && !entre2)
-                        //{    // Caso que deba ir delante cuando haya un solo elemento
-                        //    _listaAbierta.Insert(0, nodo);  // Insertamos despues del primer elemento
-                        //    entre2 = true;
-                        //}
-                        else if (!entre2)           // Si el elemento no es menor a ninguno de los elementos de la lista este se añadirá al final de la misma
+                        if (!entre2)           // Si el elemento no es menor a ninguno de los elementos comprobados de la lista, este se añadirá al final de la misma
                         {
-                            _listaAbierta.Add(nodo); // Caso que deba ir detras haya ninguno, uno, o varios elementos
-                            Debug.Log("Añadido al final!!");
+                            _listaAbierta.Add(nodo);
+                            entre2 = true;
+                            Debug.Log("El nodo se ha añadido al final de la lista");
                         }
-
-
-                        /*
-                       // FORMA DE SANDRO
-                       _listaAbierta.Add(nodo);
-                       //_listaAbierta = _listaAbierta.OrderBy(o => o.getFEstrella()).ToList();
-                       _listaAbierta.Sort((obj1, obj2) => obj1.getFEstrella().CompareTo(obj2.getFEstrella()));
-                       // */
                     }
                 }
 
             }
         }
 
-        CellInfo[] path = new CellInfo[padresMeta.Count]; ; // Devuelve la celda vecina en la dirección indicada
-        for (int i = padresMeta.Count-1, j = 0; i >= 0; i--, j++)
+        CellInfo[] path = new CellInfo[_padresMeta.Count]; ;    // Array de cell info con el tamaño de tantos padres como tenga el nodo meta
+        for (int i = _padresMeta.Count-1, j = 0; i >= 0; i--, j++)
         {
-            Debug.Log("Iteracion nº "+j+ " f* = " + padresMeta[i].getFEstrella());
-            path[j] = padresMeta[i].getInfoCelda();
+            Debug.Log("Iteracion nº "+j+ " f* = " + _padresMeta[i].getFEstrella());    // Resumen de las iteraciones realizadas que llevan a la meta
+            path[j] = _padresMeta[i].getInfoCelda();
         }
-
-
         return path;
-
-        //Debug.Log("Distancia a la meta: "+actual.getInfoCelda().Distance(_mundo.Exit, CellInfo.DistanceType.Euclidean));
-        //Debug.Log("fEstrella del nodoIncial: "+nodoInicial.getFEstrella());
-
-        //CellInfo[] path = new CellInfo[1];
-        //path[0] = _mundo[19,19];
-
-
-        //-------------------------------FORMA CON PRIORITYQUEUE--------------------------
-/*
-        Nodo nodoInicial = new Nodo(_mundo, startNode, null, 0);
-        Nodo nodoFinal = new Nodo(_mundo, targetNode, null, 0);
-
-        PriorityQueue<Nodo, float> listaAbierta = new PriorityQueue<Nodo,float>();
-        List<Nodo> listaCerrada = new List<Nodo>();
-        List<Nodo> adyacentes;
-
-        Nodo actual = nodoInicial;
-
-        listaAbierta.Enqueue(nodoInicial, nodoInicial.getFEstrella());
-
-        while(listaAbierta.Count != 0 && !listaCerrada.Exists(x => x.getInfoCelda().x == nodoFinal.getInfoCelda().x && x.getInfoCelda().y == nodoFinal.getInfoCelda().y))
-        {
-            actual = listaAbierta.Dequeue();
-            adyacentes = actual.expandirNodo();
-
-            foreach(Nodo nodoAdyacente in adyacentes)
-            {
-                listaAbierta.Enqueue(nodoAdyacente, nodoAdyacente.getFEstrella());
-            }
-        }
-//*/
     }
-
 }

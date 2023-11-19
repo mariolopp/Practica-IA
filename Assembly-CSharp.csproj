@@ -64,7 +64,6 @@
     <Compile Include="Assets\External\Supercyan Character Pack Zombie Sample\Scripts\ZombieCharacterControl.cs" />
     <Compile Include="Assets\Scripts\Navigation\Interfaces\INavigationAgent.cs" />
     <Compile Include="Assets\Scripts\GrupoI\Nodo.cs" />
-    <Compile Include="Assets\Scripts\GrupoI\AmplitudMovement.cs" />
     <Compile Include="Assets\External\Supercyan Character Pack Free Sample\Scripts\DemoFree.cs" />
     <Compile Include="Assets\External\Supercyan Character Pack Free Sample\Scripts\SimpleSampleCharacterControl.cs" />
     <Compile Include="Assets\Scripts\Components\EnemyMovement.cs" />
