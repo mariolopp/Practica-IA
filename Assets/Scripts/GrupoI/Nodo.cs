@@ -57,20 +57,22 @@ namespace GrupoI
 
             if (derecha.Walkable)
             {
-                //nodoDerecha.hestrella = 19 - nodoDerecha.infoCelda.x + 19 - nodoDerecha.infoCelda.y;
+                //nodoDerecha.fEstrella = (19 - nodoDerecha.infoCelda.x) + (19 - nodoDerecha.infoCelda.y) +g;
                 nodosExpandidos.Add(nodoDerecha);
             }
             if (izquierda.Walkable)
             {
+                //nodoIzquierda.fEstrella = 19 - nodoIzquierda.infoCelda.x + 19 - nodoIzquierda.infoCelda.y+g;
                 nodosExpandidos.Add(nodoIzquierda);
             }
             if (arriba.Walkable)
-            { 
-            
+            {
+                //nodoArriba.fEstrella = 19 - nodoArriba.infoCelda.x + 19 - nodoArriba.infoCelda.y+g;
                 nodosExpandidos.Add(nodoArriba);
             }
             if (abajo.Walkable)
             {
+                //nodoAbajo.fEstrella = 19 - nodoAbajo.infoCelda.x + 19 - nodoAbajo.infoCelda.y+g;
                 nodosExpandidos.Add(nodoAbajo);
             }
                 

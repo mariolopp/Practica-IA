@@ -76,51 +76,66 @@ public class aEstrellaMovement : INavigationAlgorithm
                         {     // Añadimos unicamente si estos no existian ya en la lista cerrada
                             count = true;
                             Debug.Log("Count es true!!");
+                            break;  // Salimos del bucle for una vez sabemos que está en la lista cerrada no hace falta seguir comprobando
                         }
                     }
                     if (!count)     // Se ejecuta si el elemento no estaba ya en la lista cerrada
                     {
                         // Meter el nodo en la posicion correspondiente ordenado con el fEstrella.
                         // Hay que tener en cuenta que la lista esté vacía o solo tenga 1 elemento.
-                        //bool entre2 = false;
-                        //if (_listaAbierta.Count < 1)     // Si hay 0 elementos añadimos directamente al final
-                        //{
-                        //    _listaAbierta.Add(nodo);
-                        //    entre2 = true;
-                        //} else {
+                        bool entre2 = false;
+                        if (_listaAbierta.Count < 1)     // Si hay 0 elementos añadimos directamente al final
+                        {
+                            _listaAbierta.Add(nodo);
+                            entre2 = true;
+                        }
+                        else if(!entre2)
+                        {
 
-                        //    for (int i = 0; i < _listaAbierta.Count - 1; i++) // Si hay 1 elemento no se ejecuta, si hay 2 elementos se ejecuta 1 vez, si hay 3 se ejecuta 2 y asi...
-                        //    {
-                        //        if (nodo.getFEstrella() >= _listaAbierta[i].getFEstrella() && nodo.getFEstrella() <= _listaAbierta[i + 1].getFEstrella())
-                        //        {
-                        //            _listaAbierta.Insert(i+1, nodo); //Insert recibe un índice. Mete el elemento antes de ese indice.
-                        //            entre2 = true;
-                        //        }
-                        //    }
-                        //}
-                        //if (nodo.getFEstrella() <= _listaAbierta[0].getFEstrella() && !entre2)
-                        //{    // Caso que deba ir delante cuando haya un solo elemento
-                        //    _listaAbierta.Insert(0, nodo);  // Insertamos despues del primer elemento
-                        //    entre2 = true;
-                        //}
-                        //else if (!entre2)
-                        //{
-                        //    _listaAbierta.Add(nodo); // Caso que deba ir detras haya ninguno, uno, o varios elementos
-                        //}
+                            //for (int i = 0; i < _listaAbierta.Count - 1; i++) // Si hay 1 elemento no se ejecuta, si hay 2 elementos se ejecuta 1 vez, si hay 3 se ejecuta 2 y asi...
+                            //{
+                            //    if (nodo.getFEstrella() >= _listaAbierta[i].getFEstrella() && nodo.getFEstrella() <= _listaAbierta[i + 1].getFEstrella())
+                            //    {
+                            //        _listaAbierta.Insert(i + 1, nodo); //Insert recibe un índice. Mete el elemento antes de ese indice.
+                            //        entre2 = true;
+                            //        break;
+                            //    }
+                            //}
 
-                        // FORMA DE SANDRO
-                        _listaAbierta.Add(nodo);
-                        //_listaAbierta = _listaAbierta.OrderBy(o => o.getFEstrella()).ToList();
-                        _listaAbierta.Sort((obj1, obj2) => obj1.getFEstrella().CompareTo(obj2.getFEstrella()));
+                            // Se puede descomentar este for y comentar el if inmediatamente posterior a este for. El resultado no es el mismo pero se sigue llegando a la meta
+                            //for (int i = 0; i < _listaAbierta.Count; i++) // Si hay 1 elemento se añadirá a su izquierda el nodo si es menor al elemento.
+                            //                                              // Si hay 2 se compara si es menor que cada uno desde el principiio para añadirlo delante del primer caso en el que sea menor
+                            //{
+                            //    Debug.Log("For iniciado!!");
+                            //    if (nodo.getFEstrella() < _listaAbierta[i].getFEstrella())  // Si el elemento es menor, este se añade a la izquierda de con el que se comparó
+                            //    {
+                            //        _listaAbierta.Insert(i, nodo); //Insert recibe un índice. Mete el elemento antes de ese indice.
+                            //        entre2 = true;
+                            //        break;  // Nos salimos del bloque for  
+                            //    }
+                            //}
+                        }
+                        if (nodo.getFEstrella() <= _listaAbierta[0].getFEstrella() && !entre2)
+                        {    // Caso que deba ir delante cuando haya un solo elemento
+                            _listaAbierta.Insert(0, nodo);  // Insertamos despues del primer elemento
+                            entre2 = true;
+                        }
+                        else if (!entre2)           // Si el elemento no es menor a ninguno de los elementos de la lista este se añadirá al final de la misma
+                        {
+                            _listaAbierta.Add(nodo); // Caso que deba ir detras haya ninguno, uno, o varios elementos
+                        }
 
+
+                        /*
+                       // FORMA DE SANDRO
+                       _listaAbierta.Add(nodo);
+                       //_listaAbierta = _listaAbierta.OrderBy(o => o.getFEstrella()).ToList();
+                       _listaAbierta.Sort((obj1, obj2) => obj1.getFEstrella().CompareTo(obj2.getFEstrella()));
+                       // */
                     }
                 }
 
             }
-
-            
-
-
         }
 
         CellInfo[] path = new CellInfo[padresMeta.Count]; ; // Devuelve la celda vecina en la dirección indicada
