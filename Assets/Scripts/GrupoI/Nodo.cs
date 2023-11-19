@@ -57,7 +57,7 @@ namespace GrupoI
 
             if (derecha.Walkable)
             {
-                //nodoDerecha.fEstrella = (19 - nodoDerecha.infoCelda.x) + (19 - nodoDerecha.infoCelda.y) +g;
+                //nodoDerecha.fEstrella = (19 - nodoDerecha.infoCelda.x) + (19 - nodoDerecha.infoCelda.y) + g;
                 nodosExpandidos.Add(nodoDerecha);
             }
             if (izquierda.Walkable)
